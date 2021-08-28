@@ -10,5 +10,6 @@ public interface MuestraRepository extends JpaRepository<Muestra, Integer> {
 
     List<Muestra> findAll();
     List<Muestra> findMuestraByAltura(Integer alturaNivelMar);
+    Muestra findByMuestraId(Integer id);
     
 }

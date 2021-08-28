@@ -77,6 +77,8 @@ public class Boya {
         this.muestras.add(muestra);
         muestra.setBoya(this); 
     }
+
+    
     /*
     public ColorBoyaEnum getColorBoya() {
         return ColorBoyaEnum.parse(colorBoya);

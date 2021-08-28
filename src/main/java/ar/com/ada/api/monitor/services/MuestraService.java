@@ -1,6 +1,7 @@
 package ar.com.ada.api.monitor.services;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class MuestraService {
     BoyaService boyaService;
 
     public Muestra registrarMuestra(Boya boya, Date horario, String matricula, double latitud, double longitud,
-            int alturaNivelMar) {
+            Integer alturaNivelMar) {
         Muestra muestra = new Muestra();
         muestra.setBoya(boya);
         muestra.setHorarioMuestra(horario);
@@ -30,10 +31,38 @@ public class MuestraService {
         repo.save(muestra);
         //Relación bidireccional.
         boya.agregarMuestra(muestra);
+
         return muestra;
     }
 
+    public List<Muestra> obtenerMuestrasPorColor(Integer alturaNivelMar){
+        List<Boya> boyas = boyaService.listarTotalBoyas();
+        for (Boya boya: boyas){
+            List<Muestra> listaMuestras = boyaService.getMuestras();
+        }
 
+        //List<Muestra> listaMuestras = new ArrayList<>;
+        //newBoyaService.getMuestras()
+        //List<Integer> list = new ArrayList<>
+        //for (Muestra muestra: muestras) {
+            //respuesta.setPregunta(pregunta);
+   }
+
+    public boolean validarMuestraExistente(Integer id) {
+        Muestra muestra = repo.findByMuestraId(id);
+        if (muestra!= null){
+            return true;
+        }else
+            return false;
+
+    }
+
+    public Muestra buscarPorId(Integer id){
+        return repo.findByMuestraId(id);
+
+    }
+
+    
 
 
 

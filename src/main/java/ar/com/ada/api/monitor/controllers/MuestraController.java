@@ -10,6 +10,7 @@ import ar.com.ada.api.monitor.entities.*;
 import ar.com.ada.api.monitor.models.request.InfoBoyaNueva;
 import ar.com.ada.api.monitor.models.request.InfoMuestraNueva;
 import ar.com.ada.api.monitor.models.response.GenericResponse;
+import ar.com.ada.api.monitor.models.response.MuestraAlturaMinima;
 import ar.com.ada.api.monitor.models.response.MuestraTomada;
 import ar.com.ada.api.monitor.services.BoyaService;
 import ar.com.ada.api.monitor.services.MuestraService;
@@ -25,7 +26,7 @@ public class MuestraController {
 
     @PostMapping("/api/muestras")
     public ResponseEntity<?> registrarMuestra(@RequestBody InfoMuestraNueva muestraNueva){
-        boolean boyaExistente = boyaService.validarBoyaExistente(muestraNueva.boyaId);
+        
         if (boyaService.validarBoyaExistente(muestraNueva.boyaId)){
             Boya boya = boyaService.buscarPorId(muestraNueva.boyaId);
             Muestra muestra = muestraService.registrarMuestra(boya, muestraNueva.horario,muestraNueva.matricula,
@@ -43,6 +44,7 @@ public class MuestraController {
             GenericResponse respuesta = new GenericResponse();
             respuesta.isOk = false;
             respuesta.message = "No se pudo registrar la muestra.";
+            return ResponseEntity.badRequest().body(respuesta);
         }
 
 
@@ -64,31 +66,56 @@ public class MuestraController {
 
 
     @GetMapping("/api/muestras/boyas/{idBoya}")
-    ResponseEntity<List<Muestra>> listarMuestrasPorBoya(@PathVariable Integer boyaId){
+    public ResponseEntity<List<Muestra>> listarMuestrasPorBoya(@PathVariable Integer boyaId){
         if (boyaService.validarBoyaExistente(boyaId)){
             List<Muestra> listaMuestras = boyaService.buscarPorId(boyaId).getMuestras();
             return ResponseEntity.ok(listaMuestras);
-        }else
-        {
-           return ResponseEntity.badRequest().build();
-        }
+        }else{
+           return ResponseEntity.badRequest().build(); 
     }
+}
 
     //Reseteara el color de la luz de la boya a “AZUL” a partir de una muestra especifica
     @DeleteMapping("/api/muestras/{id}")
-
- 
+    public ResponseEntity<GenericResponse> resetearBoya(@PathVariable Integer id){
+        GenericResponse r = new GenericResponse();
+        if (muestraService.validarMuestraExistente(id)){
+            Muestra muestra = muestraService.buscarPorId(id);
+            boyaService.ResetearColorBoya(muestra.getBoya());
+            r.isOk = true;
+            r.message = "La boya ha quedado inactiva.";
+            return ResponseEntity.ok(r);
+        } else {
+            r.isOk = false;
+            r.message = "No se pudo encontrar dicha muestra.";
+            return ResponseEntity.badRequest().body(r);
+        }
+    }
 
 
     //: que devuelva la lista de muestras de un color en formato JSON Array:
     @GetMapping("/api/muestras/colores/{color}")
-
-
+    public ResponseEntity<List<Muestra>> obtenerMuestrasPorColor(@PathVariable String colorBoya){
+        List<Muestra> muestrasPorColor = muestraService.obtenerMuestrasPorColor(colorBoya);
+        return ResponseEntity.ok(muestrasPorColor);
+    }
 
     //que devuelva la muestra donde la altura nivel del mar sea la minima para una boya 
     //en particular particular en este formato JSON(informar el horario en que ocurrió)
     @GetMapping("/api/muestras/minima/{idBoya}")
+    public ResponseEntity<MuestraAlturaMinima> obtenerMuestraAlturaMinima(@PathVariable Integer boyaId){
+        if (boyaService.validarBoyaExistente(boyaId)){
+            Muestra muestra = boyaService.obtenerMuestraAlturaMinima(boyaId);
+            MuestraAlturaMinima r = new MuestraAlturaMinima();
+            r.color = muestra.get;
+            r.alturaNivelDelMarMinima = muestra.getAlturaNivelMar();
+            r.horario = muestra.getHorarioMuestra();
+            return ResponseEntity.ok(r);
+        }else{
+           return ResponseEntity.badRequest().build(); 
+    }
+
+    }
 
 }
-
 

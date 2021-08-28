@@ -53,6 +53,7 @@ public class BoyaService {
         return repo.findAll();
     }
 
+       
 
 	public List<Boya> listarBoyasPorColor(String color) {
 		return repo.findByColor(color);
@@ -66,6 +67,7 @@ public class BoyaService {
             return false;
 
     }
+    
 
 
     //DELETE LÓGICO. Se setea el color en AZUL = indefinido.
