@@ -1,5 +1,8 @@
 package ar.com.ada.api.monitor.entities;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.*;
 
 
@@ -19,6 +22,7 @@ public class Muestra {
     private Boya boya;
 
     @Column(name = "horario_muestra")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date horarioMuestra;
 
     //Embarcacion: string, matrícula de la embarcación, esto solo si hay un barco en
@@ -51,6 +55,7 @@ public class Muestra {
 
     public void setBoya(Boya boya) {
         this.boya = boya;
+        this.boya.getMuestras().add(this);
     }
 
     public Date getHorarioMuestra() {
@@ -93,7 +98,7 @@ public class Muestra {
         this.alturaNivelMar = alturaNivelMar;
     }
 
-
+    
     
 }
 
