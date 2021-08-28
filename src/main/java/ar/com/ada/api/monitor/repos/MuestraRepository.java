@@ -8,6 +8,7 @@ import java.util.*;
 @Repository
 public interface MuestraRepository extends JpaRepository<Muestra, Integer> {
 
-    List<Muestra> findMuestrasByBoyaId(Integer boyaId);
+    List<Muestra> findAll();
+    List<Muestra> findMuestraByAltura(Integer alturaNivelMar);
     
 }
