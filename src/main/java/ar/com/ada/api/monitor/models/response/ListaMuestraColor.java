@@ -5,8 +5,6 @@ import java.sql.Date;
 public class ListaMuestraColor {
     public Integer boyaId;
     public Date horario;
-    public Integer alturalNivelDelMar;
+    public double alturaNivelDelMar;
 
-
-  
 }

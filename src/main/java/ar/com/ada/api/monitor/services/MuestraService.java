@@ -1,6 +1,8 @@
 package ar.com.ada.api.monitor.services;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ar.com.ada.api.monitor.entities.Boya;
 import ar.com.ada.api.monitor.entities.Muestra;
+import ar.com.ada.api.monitor.models.response.ListaMuestraColor;
 import ar.com.ada.api.monitor.repos.MuestraRepository;
 
 @Service
@@ -31,21 +34,24 @@ public class MuestraService {
         repo.save(muestra);
         //Relación bidireccional.
         boya.agregarMuestra(muestra);
-
         return muestra;
     }
 
-    public List<Muestra> obtenerMuestrasPorColor(Integer alturaNivelMar){
-        List<Boya> boyas = boyaService.listarTotalBoyas();
-        for (Boya boya: boyas){
-            List<Muestra> listaMuestras = boyaService.getMuestras();
+    public List<ListaMuestraColor> obtenerMuestrasPorColor(String color){
+        List<ListaMuestraColor> ListaMuestrasPorColor = new ArrayList<>();
+        ListaMuestraColor muestraPorColor= new ListaMuestraColor();
+        
+        for (Muestra muestra : repo.findAll()) {            
+            
+            String tipoMuestra = clasificarMuestraPorAltura(muestra);
+            if (tipoMuestra == color){
+                muestraPorColor.boyaId = muestra.getBoya().getBoyaId();
+                muestraPorColor.horario= muestra.getHorarioMuestra();
+                muestraPorColor.alturaNivelDelMar = muestra.getAlturaNivelMar();                    
+                ListaMuestrasPorColor.add(muestraPorColor);
+            }
         }
-
-        //List<Muestra> listaMuestras = new ArrayList<>;
-        //newBoyaService.getMuestras()
-        //List<Integer> list = new ArrayList<>
-        //for (Muestra muestra: muestras) {
-            //respuesta.setPregunta(pregunta);
+        return ListaMuestrasPorColor;
    }
 
     public boolean validarMuestraExistente(Integer id) {
@@ -62,8 +68,27 @@ public class MuestraService {
 
     }
 
-    
+    public String clasificarMuestraPorAltura(Muestra muestra){
+        Double alt = muestra.getAlturaNivelMar();
+        if (alt <= -50 || alt >= 50){
+            return "AMARILLO";
+        }else if (alt <= -100 || alt >= 100){
+            return "ROJO";
+        }else{
+            return "VERDE";
+        } 
+    }
+
+    public HashMap<Muestra, Integer> mapearMuestra(Muestra muestra, Integer tipo){
+        HashMap<Muestra, Integer> mapaMuestras = new HashMap<Muestra, Integer>();
+        mapaMuestras.put(muestra, tipo);
+        return mapaMuestras;        
+    }
 
 
 
 }
+
+
+
+ 

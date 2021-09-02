@@ -2,6 +2,7 @@ package ar.com.ada.api.monitor.controllers;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import ar.com.ada.api.monitor.entities.*;
 import ar.com.ada.api.monitor.models.request.InfoBoyaNueva;
 import ar.com.ada.api.monitor.models.request.InfoMuestraNueva;
 import ar.com.ada.api.monitor.models.response.GenericResponse;
+import ar.com.ada.api.monitor.models.response.ListaMuestraColor;
 import ar.com.ada.api.monitor.models.response.MuestraAlturaMinima;
 import ar.com.ada.api.monitor.models.response.MuestraTomada;
 import ar.com.ada.api.monitor.services.BoyaService;
@@ -95,13 +97,13 @@ public class MuestraController {
 
     //: que devuelva la lista de muestras de un color en formato JSON Array:
     @GetMapping("/api/muestras/colores/{color}")
-    public ResponseEntity<List<Muestra>> obtenerMuestrasPorColor(@PathVariable String colorBoya){
-        List<Muestra> muestrasPorColor = muestraService.obtenerMuestrasPorColor(colorBoya);
-        return ResponseEntity.ok(muestrasPorColor);
+    public ResponseEntity<List<ListaMuestraColor>> obtenerMuestrasPorColor(@PathVariable String colorBoya){
+        return ResponseEntity.ok(muestraService.obtenerMuestrasPorColor(colorBoya));
     }
 
     //que devuelva la muestra donde la altura nivel del mar sea la minima para una boya 
     //en particular particular en este formato JSON(informar el horario en que ocurrió)
+   
     @GetMapping("/api/muestras/minima/{idBoya}")
     public ResponseEntity<MuestraAlturaMinima> obtenerMuestraAlturaMinima(@PathVariable Integer boyaId){
         if (boyaService.validarBoyaExistente(boyaId)){

@@ -22,6 +22,7 @@ public class BoyaService {
         boya.setLongitudInstalacion(longitudInstalacion);
         boya.setColorBoya(null); // La primera vez está nulo.
         repo.save(boya);
+        
         return boya;   
     }
 
@@ -53,7 +54,7 @@ public class BoyaService {
         return repo.findAll();
     }
 
-       
+      
 
 	public List<Boya> listarBoyasPorColor(String color) {
 		return repo.findByColor(color);
@@ -68,8 +69,6 @@ public class BoyaService {
 
     }
     
-
-
     //DELETE LÓGICO. Se setea el color en AZUL = indefinido.
 	public void ResetearColorBoya(Boya boya) {
         boya.setColorBoya("AZUL");
@@ -80,10 +79,4 @@ public class BoyaService {
     
 
 }
-
-
-
-
-
-
 
