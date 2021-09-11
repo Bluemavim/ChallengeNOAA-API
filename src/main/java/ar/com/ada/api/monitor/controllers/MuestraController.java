@@ -2,7 +2,6 @@ package ar.com.ada.api.monitor.controllers;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +15,7 @@ import ar.com.ada.api.monitor.models.response.MuestraAlturaMinima;
 import ar.com.ada.api.monitor.models.response.MuestraTomada;
 import ar.com.ada.api.monitor.services.BoyaService;
 import ar.com.ada.api.monitor.services.MuestraService;
+import ar.com.ada.api.monitor.utils.ColoresUtils;
 
 @RestController
 public class MuestraController {
@@ -109,7 +109,7 @@ public class MuestraController {
         if (boyaService.validarBoyaExistente(boyaId)){
             Muestra muestra = boyaService.obtenerMuestraAlturaMinima(boyaId);
             MuestraAlturaMinima r = new MuestraAlturaMinima();
-            r.color = muestra.get;
+            r.color = ColoresUtils.clasificarMuestraPorAltura(muestra);
             r.alturaNivelDelMarMinima = muestra.getAlturaNivelMar();
             r.horario = muestra.getHorarioMuestra();
             return ResponseEntity.ok(r);

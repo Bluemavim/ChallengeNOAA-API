@@ -76,6 +76,10 @@ public class BoyaService {
 
 	}
 
+    public Muestra obtenerMuestraAlturaMinima(Integer boyaId) {
+        return null;
+    }
+
     
 
 }

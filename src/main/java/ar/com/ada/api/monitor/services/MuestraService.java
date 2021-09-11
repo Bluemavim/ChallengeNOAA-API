@@ -12,6 +12,8 @@ import ar.com.ada.api.monitor.entities.Boya;
 import ar.com.ada.api.monitor.entities.Muestra;
 import ar.com.ada.api.monitor.models.response.ListaMuestraColor;
 import ar.com.ada.api.monitor.repos.MuestraRepository;
+import ar.com.ada.api.monitor.utils.*;
+
 
 @Service
 public class MuestraService {
@@ -43,10 +45,10 @@ public class MuestraService {
         
         for (Muestra muestra : repo.findAll()) {            
             
-            String tipoMuestra = clasificarMuestraPorAltura(muestra);
+            String tipoMuestra = ColoresUtils.clasificarMuestraPorAltura(muestra);
             if (tipoMuestra == color){
                 muestraPorColor.boyaId = muestra.getBoya().getBoyaId();
-                muestraPorColor.horario= muestra.getHorarioMuestra();
+               //muestraPorColor.horario= muestra.getHorarioMuestra();
                 muestraPorColor.alturaNivelDelMar = muestra.getAlturaNivelMar();                    
                 ListaMuestrasPorColor.add(muestraPorColor);
             }
@@ -68,16 +70,6 @@ public class MuestraService {
 
     }
 
-    public String clasificarMuestraPorAltura(Muestra muestra){
-        Double alt = muestra.getAlturaNivelMar();
-        if (alt <= -50 || alt >= 50){
-            return "AMARILLO";
-        }else if (alt <= -100 || alt >= 100){
-            return "ROJO";
-        }else{
-            return "VERDE";
-        } 
-    }
 
     public HashMap<Muestra, Integer> mapearMuestra(Muestra muestra, Integer tipo){
         HashMap<Muestra, Integer> mapaMuestras = new HashMap<Muestra, Integer>();

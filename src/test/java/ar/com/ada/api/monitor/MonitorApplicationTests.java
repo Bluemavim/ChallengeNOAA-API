@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ar.com.ada.api.monitor.entities.Muestra;
 import ar.com.ada.api.monitor.services.MuestraService;
+import ar.com.ada.api.monitor.utils.ColoresUtils;
 import ar.com.ada.api.monitor.utils.UbicacionesUtils;
 
 @SpringBootTest
@@ -78,9 +79,60 @@ class MonitorApplicationTests {
 		assertFalse(UbicacionesUtils.validarSiEsHemisferioNorte(latitudNoOk, longitudOk));
 		assertTrue(UbicacionesUtils.validarSiEsHemisferioNorte(latitudOk, longitudOk));
 		assertFalse(UbicacionesUtils.validarSiEsHemisferioNorte(Math.abs(latitudNoOk), longitudOk));
-		
 		assertFalse(UbicacionesUtils.validarSiEsHemisferioNorte(m.getLatitud(), m.getLongitud()));
-		
 	}
+
+
+	//Validar que una meustra de -35 dé color AMARILLO (este escenario esta mal a proposito para que vean que no siempre armar escenarios esta bien)
+    //Validar que una muestra de 180 NO dé color AMARILLO
+	@Test
+	void testValidarColorAmarillo1(){
+		Muestra m = new Muestra();
+		m.setAlturaNivelMar(-35);
+		assertTrue(ColoresUtils.clasificarMuestraPorAltura(m).equals("AMARILLO"));
+	}
+	@Test
+	void testValidarColorAmarillo2(){
+		Muestra m = new Muestra();
+		m.setAlturaNivelMar(180);
+		ColoresUtils.clasificarMuestraPorAltura(m);
+		assertFalse(ColoresUtils.clasificarMuestraPorAltura(m).equals("AMARILLO"));
+
+	}
+
+
+	//Validar que una muestra de 10 dé color VERDE
+    //Validar que una muestra de -100 NO dé color VERDE
+	@Test
+	void testValidarColorVerde1(){
+		Muestra m = new Muestra();
+		m.setAlturaNivelMar(10);
+		ColoresUtils.clasificarMuestraPorAltura(m);
+		assertTrue(ColoresUtils.clasificarMuestraPorAltura(m).equals("VERDE"));
+
+	}
+
+	@Test
+	void testValidarColorVerde2(){
+		Muestra m = new Muestra();
+		m.setAlturaNivelMar(-100);
+		ColoresUtils.clasificarMuestraPorAltura(m);
+		assertFalse(ColoresUtils.clasificarMuestraPorAltura(m).equals("VERDE"));
+
+	}
+
+
+	//Validar que una muestra de 120 dé ROJO
+	@Test
+	void testValidaruMuestraColorRojo(){
+		Muestra m = new Muestra();
+		m.setAlturaNivelMar(120);
+		ColoresUtils.clasificarMuestraPorAltura(m);
+		assertTrue(ColoresUtils.clasificarMuestraPorAltura(m).equals("ROJO"));
+	}
+
+
+    
+
 
 }
